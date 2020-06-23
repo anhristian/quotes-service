@@ -2,11 +2,15 @@ package edu.cnm.deepdive.quotes.model.entity;
 
 
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,17 +19,13 @@ import org.springframework.lang.NonNull;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-public class Source {
+public class Quote {
 
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "source_id", nullable = false, updatable = false)
+  @Column(name = "quote_id", nullable = false, updatable = false)
   private Long id;
-
-  @NonNull
-  @Column(length = 100, nullable = false, unique = true)
-  private String name;
 
 
   @CreationTimestamp
@@ -39,18 +39,19 @@ public class Source {
   @Column(nullable = false)
   private Date updated;
 
+  @NonNull
+  @Column(length = 4096, nullable = false)
+  private String text;
+
+  @ManyToOne(fetch = FetchType.EAGER,
+  cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @JoinColumn(name = "source_id")
+  //this is a field
+  private Source source;
+
 
   public Long getId() {
     return id;
-  }
-
-  @NonNull
-  public String getName() {
-    return name;
-  }
-
-  public void setName(@NonNull String name) {
-    this.name = name;
   }
 
 
@@ -61,5 +62,21 @@ public class Source {
 
   public Date getUpdated() {
     return updated;
+  }
+
+  public String getText() {
+    return text;
+  }
+@NonNull
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public Source getSource() {
+    return source;
+  }
+
+  public void setSource(Source source) {
+    this.source = source;
   }
 }
