@@ -1,0 +1,42 @@
+package edu.cnm.deepdive.quotes.controller;
+
+import edu.cnm.deepdive.quotes.model.entity.Quote;
+import edu.cnm.deepdive.quotes.model.entity.Tag;
+import edu.cnm.deepdive.quotes.service.QuoteRepository;
+import edu.cnm.deepdive.quotes.service.TagRepository;
+
+import java.util.NoSuchElementException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/tags")
+public class TagController {
+
+  private final QuoteRepository quoteRepository;
+  private final TagRepository tagRepository;
+
+  @Autowired
+  public TagController(QuoteRepository quoteRepository,
+      TagRepository tagRepository) {
+    this.quoteRepository = quoteRepository;
+    this.tagRepository = tagRepository;
+  }
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public Iterable<Tag> get() {
+    return tagRepository.getAllByOrderByNameAsc();
+  }
+
+  @GetMapping(value = "/{id:\\d+}/quotes", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Iterable<Quote> getQuotes(@PathVariable long id) {
+    return tagRepository.findById(id)
+        .map(quoteRepository::getAllByTagsContainingOrderByTextAsc)
+        .orElseThrow(NoSuchElementException::new);
+  }
+
+  }
+
