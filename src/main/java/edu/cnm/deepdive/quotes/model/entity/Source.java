@@ -1,6 +1,10 @@
 package edu.cnm.deepdive.quotes.model.entity;
 
 
+import com.fasterxml.jackson.databind.JsonSerializable;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.cnm.deepdive.quotes.view.FlatQuote;
+import edu.cnm.deepdive.quotes.view.FlatSource;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +25,7 @@ import org.springframework.lang.NonNull;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-public class Source {
-
+public class Source implements FlatSource {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,19 +48,21 @@ public class Source {
   @Column(nullable = false)
   private Date updated;
 
-  @OneToMany(                             //given name of the field
+  @OneToMany(                             //given name of the field.JPA annotation
       fetch = FetchType.LAZY,
       mappedBy = "source",
-      cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REFRESH}
-      )
-  @OrderBy("text ASC")             //how to sort them in sql  //put getter just
+      cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+  )
+  @OrderBy("text ASC")//how to sort them in sql  //put getter just.JPA annotation
+  @JsonSerialize(contentAs = FlatQuote.class)  //everything which is a Quote is a FlatQuote.
   private List<Quote> quotes = new LinkedList<>();
 
-
+  @Override
   public Long getId() {
     return id;
   }
 
+  @Override
   @NonNull
   public String getName() {
     return name;
@@ -67,12 +72,12 @@ public class Source {
     this.name = name;
   }
 
-
+  @Override
   public Date getCreated() {
     return created;
   }
 
-
+  @Override
   public Date getUpdated() {
     return updated;
   }
