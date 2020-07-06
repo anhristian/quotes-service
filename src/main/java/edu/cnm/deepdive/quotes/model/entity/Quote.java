@@ -50,7 +50,7 @@ public class Quote {
 
   @ManyToOne(fetch = FetchType.EAGER,
   cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-  @JoinColumn(name = "source_id")
+  @JoinColumn(name = "source_id", nullable = false)
   //this is a field
   private Source source;
 

@@ -2,11 +2,17 @@ package edu.cnm.deepdive.quotes.model.entity;
 
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +45,14 @@ public class Source {
   @Column(nullable = false)
   private Date updated;
 
+  @OneToMany(                             //given name of the field
+      fetch = FetchType.LAZY,
+      mappedBy = "source",
+      cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REFRESH}
+      )
+  @OrderBy("text ASC")             //how to sort them in sql  //put getter just
+  private List<Quote> quotes = new LinkedList<>();
+
 
   public Long getId() {
     return id;
@@ -61,5 +75,9 @@ public class Source {
 
   public Date getUpdated() {
     return updated;
+  }
+
+  public List<Quote> getQuotes() {
+    return quotes;
   }
 }
