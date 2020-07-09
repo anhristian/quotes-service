@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.quotes.controller;
 
 import edu.cnm.deepdive.quotes.model.entity.Quote;
+import edu.cnm.deepdive.quotes.model.entity.Source;
 import edu.cnm.deepdive.quotes.model.entity.Tag;
 import edu.cnm.deepdive.quotes.service.QuoteRepository;
 import edu.cnm.deepdive.quotes.service.SourceRepository;
@@ -78,7 +79,16 @@ public class QuoteController {
   public Iterable<Quote> search(@RequestParam(name = "q", required = true) String filter){
     return quoteRepository.getAllByTextContainingOrderByTextAsc(filter);
     }
-/*  @PutMapping(value = "/{id:\\d+}/text",
-      produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.TEXT_PLAIN_VALUE)
-  public String putText(@PathVariable long id, @RequestBody String text)*/ //just example
+  @PutMapping(value = "/{id:\\d+}/source",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public Quote putSource(@PathVariable long id, @RequestBody Source source) {
+    Quote quote = get(id);
+    if (source != null && source.getId() != null) {
+      source = sourceRepository.findById(source.getId()).orElseThrow(NoSuchElementException::new);
+    }
+    quote.setSource(source);
+    return quoteRepository.save(quote);
+
+  }
 }
