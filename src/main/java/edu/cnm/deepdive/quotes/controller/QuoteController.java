@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/quotes")
+@ExposesResourceFor(Quote.class) //change to each class respectively the Quote.class
 public class QuoteController {
 
   private final QuoteRepository quoteRepository;
@@ -44,8 +48,7 @@ public class QuoteController {
 
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(HttpStatus.CREATED)
-  public Quote post(@RequestBody Quote quote) {
+  public ResponseEntity<Quote> post(@RequestBody Quote quote) {
     //if you got a source object include in json that has an id let me look on the source.
     // refers to an id that already exist.
     if (quote.getSource() != null && quote.getSource().getId() != null) {
@@ -63,7 +66,8 @@ public class QuoteController {
         .collect(Collectors.toList());
     quote.getTags().clear();
     quote.getTags().addAll(resolvedTags);
-    return quoteRepository.save(quote);
+    quoteRepository.save(quote);
+    return ResponseEntity.created(quote.getHref()).body(quote);  //give the value of location ..Post should have it
   }
 
   @GetMapping(value = "/{id:\\d+}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,5 +78,7 @@ public class QuoteController {
   public Iterable<Quote> search(@RequestParam(name = "q", required = true) String filter){
     return quoteRepository.getAllByTextContainingOrderByTextAsc(filter);
     }
-
+/*  @PutMapping(value = "/{id:\\d+}/text",
+      produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.TEXT_PLAIN_VALUE)
+  public String putText(@PathVariable long id, @RequestBody String text)*/ //just example
 }
