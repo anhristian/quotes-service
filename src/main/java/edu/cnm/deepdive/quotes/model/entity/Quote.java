@@ -117,6 +117,14 @@ private static EntityLinks entityLinks;
     this.source = source;
   }
 
+  public User getContributor() {
+    return contributor;
+  }
+
+  public void setContributor(User contributor) {
+    this.contributor = contributor;
+  }
+
   public List<Tag> getTags() {
     return tags;
   }

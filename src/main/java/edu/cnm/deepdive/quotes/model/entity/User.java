@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-@Table(name = "user_profile")//suppress for class
+@Table(name = "user_profile")
 @Component
 @JsonIgnoreProperties(
     value = {"id", "created", "updated", "href", "oauthKey"},
@@ -40,18 +40,15 @@ public class User implements FlatUser {
   @Column(name = "user_id", nullable = false, updatable = false)
   private Long id;
 
-
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
   private Date created;
 
-
   @UpdateTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
   private Date updated;
-
 
   @Column(nullable = false, unique = true)
   private String displayName;
@@ -63,10 +60,6 @@ public class User implements FlatUser {
   @Enumerated(value = EnumType.ORDINAL)
   @Column(nullable = false)
   private Role role = Role.USER;
-
-  public static EntityLinks getEntityLinks() {
-    return entityLinks;
-  }
 
   @Override
   public Long getId() {
@@ -109,7 +102,7 @@ public class User implements FlatUser {
     this.role = role;
   }
 
-  @PostConstruct                    //initilized Hydeaoss
+  @PostConstruct
   private void initHateoas() {
     //noinspection ResultOfMethodCallIgnored
     entityLinks.toString();
@@ -118,15 +111,14 @@ public class User implements FlatUser {
   @Autowired
   private void setEntityLinks(
       @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") EntityLinks entityLinks) {
-    User.entityLinks = entityLinks; // Adjust when copying to other class
+    User.entityLinks = entityLinks;
   }
-
 
   @Override
   public URI getHref() {
-    return (id != null) ? entityLinks.linkForItemResource(User.class, id).toUri(): null; //Ternary operation: have id ask Hed to generet the link and torn tu URI
-
+    return (id != null) ? entityLinks.linkForItemResource(User.class, id).toUri() : null;
   }
+
   public enum Role {
     USER, ADMINISTRATOR
   }
