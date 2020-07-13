@@ -71,7 +71,7 @@ private static EntityLinks entityLinks;
   private Source source;  //this is a field
 
   @ManyToOne(fetch = FetchType.EAGER,
-      cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+      cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
   @JoinColumn(name = "contributor_id")
   private User contributor;
 
