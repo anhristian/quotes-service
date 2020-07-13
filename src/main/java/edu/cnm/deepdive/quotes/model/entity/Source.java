@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.quotes.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.cnm.deepdive.quotes.view.FlatQuote;
@@ -32,6 +33,11 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Component
+@JsonIgnoreProperties(
+    value = {"created", "updated", "quotes", "href"},
+    allowGetters = true,
+    ignoreUnknown = true
+)
 public class Source implements FlatSource {
 
   private static EntityLinks entityLinks;
