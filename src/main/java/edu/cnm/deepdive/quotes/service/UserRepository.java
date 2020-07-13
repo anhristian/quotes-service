@@ -9,6 +9,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findFirstByOauthKey(String oauthKey);
 
-  Iterable<User> getAllByRoleOrOrderByDisplayNameAsc(Role role);
+  Iterable<User> getAllByRoleOrderByDisplayNameAsc(Role role);
 
 }
