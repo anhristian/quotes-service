@@ -65,7 +65,8 @@ public class SourceController {
   }
 
   @PutMapping(value = "/{id:\\d+}",
-      consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public Source put(@PathVariable long id, @RequestBody Source source) {
     Source existingSource = get(id);  //it is a source that is in database
     if (source.getName() != null) {

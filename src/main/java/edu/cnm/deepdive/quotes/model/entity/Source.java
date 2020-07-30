@@ -64,7 +64,7 @@ public class Source implements FlatSource {
 
   @OneToMany(                             //given name of the field.JPA annotation
       fetch = FetchType.LAZY,
-      mappedBy = "source",
+      mappedBy = "source", //history
       cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
   )
   @OrderBy("text ASC")//how to sort them in sql  //put getter just.JPA annotation

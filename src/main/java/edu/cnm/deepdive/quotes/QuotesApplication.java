@@ -28,7 +28,7 @@ public class QuotesApplication extends ResourceServerConfigurerAdapter {
 
   @Override
   public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-    resources.resourceId(clientId);
+    resources.resourceId(clientId); //is the identifier of what we protect
   }
 
   @Override
